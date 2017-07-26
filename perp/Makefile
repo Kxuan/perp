@@ -4,8 +4,8 @@
 # ===
 
 include ../conf.mk
-CFLAGS += -I. -I../lasagna
-LDFLAGS += -L../lasagna -lasagna
+override CFLAGS += -I. -I../lasagna
+override LDFLAGS += -L../lasagna -lasagna
 
 PERPAPPS = \
   perpd \

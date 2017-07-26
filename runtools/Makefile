@@ -6,8 +6,8 @@
 
 # build configuration:
 include ../conf.mk
-CFLAGS += -I../lasagna
-LDFLAGS += -L../lasagna -lasagna
+override CFLAGS += -I../lasagna
+override LDFLAGS += -L../lasagna -lasagna
 
 RUNTOOLS = \
   runargs \

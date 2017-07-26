@@ -4,7 +4,7 @@
 # ===
 
 include ../conf.mk
-CFLAGS += -I.
+override CFLAGS += -I.
 
 all: libasagna.a
 
