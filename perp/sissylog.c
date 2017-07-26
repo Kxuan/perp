@@ -4,6 +4,7 @@
 ** ===
 */
 #include <stddef.h>
+#include <stdlib.h>
 
 #include <unistd.h>
 #include <syslog.h>
@@ -16,7 +17,7 @@
 #include "sissylog.h"
 
 static const char *progname = NULL;
-static const char prog_usage[] = "[-hV] [ ident [ facility ]]";
+static const char prog_usage[] = "[-hV] [-l LOG_LEVEL] [ ident [ facility ]]";
 
 /* ioq for stdin: */
 #define INBUF_SIZE  1024
@@ -125,11 +126,12 @@ do_log(void)
 int
 main(int argc, char *argv[])
 {
-  nextopt_t    nopt = nextopt_INIT(argc, argv, ":hV");
+  nextopt_t    nopt = nextopt_INIT(argc, argv, ":hVl:");
   char         opt;
   const char  *arg_ident;
   const char  *arg_facility = "LOG_DAEMON";
   int          id_facility;
+  int          pri = LOG_INFO;
   int          e;
 
   progname = nextopt_progname(&nopt);
@@ -139,6 +141,7 @@ main(int argc, char *argv[])
       switch(opt){
       case 'h': usage(); die(0); break;
       case 'V': version(); die(0); break;
+      case 'l': pri = atoi(nopt.opt_arg); break;
       case '?':
           if(nopt.opt_got != '?'){
               fatal_usage("invalid option: -", optc);
@@ -186,6 +189,7 @@ main(int argc, char *argv[])
   }
 
   openlog(arg_ident, 0, id_facility);
+  setlogmask(LOG_UPTO(pri));
   cstr_vcopy(attention, progname, ": logging from stdin ...");
   logline_post(attention, 0);
 
