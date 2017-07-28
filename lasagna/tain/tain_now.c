@@ -13,12 +13,11 @@
 struct tain *
 tain_now(struct tain *t)
 {
-  struct timeval now;
+  struct timespec now;
 
-  gettimeofday(&now, NULL);
-  tain_load_utc(t, now.tv_sec);
-  t->nsec = (1000 * now.tv_usec) + 500;
-
+  clock_gettime(CLOCK_MONOTONIC_COARSE, &now);
+  t->sec = now.tv_sec;
+  t->nsec = now.tv_nsec;
   return t;
 }
 
